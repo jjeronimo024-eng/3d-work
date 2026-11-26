@@ -1,0 +1,14 @@
+{
+  "stage": "vineyard",
+  "camera": {
+    "start": [0, 2, 6]
+  },
+  "lighting": {
+    "color": "#ffcc88",
+    "intensity": 1
+  },
+  "environment": {
+    "fog": true,
+    "wind": true
+  }
+}

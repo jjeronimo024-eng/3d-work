@@ -1,0 +1,264 @@
+/* ============================================================
+   FILE: assets/css/ui.css
+   PURPOSE:
+   Styles the cinematic overlay UI that sits above the 3D scene.
+
+   WHY THIS FILE EXISTS:
+   - Keeps the luxury interface styling separate from structural layout CSS
+   - Controls the stage title, subtitle, progress display, and overlay spacing
+   - Makes it easier to iterate on branding/UI without touching main.css
+
+   HOW IT FITS INTO THE SYSTEM:
+   - Loaded by includes/header.php
+   - Styles the overlay HTML defined in index.php
+   - Works with ui-controller.js, which updates the content dynamically
+   ============================================================ */
+
+
+/* ============================================================
+   SECTION: Overlay Root
+   WHAT THIS DOES:
+   - Creates a full-screen fixed overlay layer above the 3D scene
+
+   WHY WE NEED IT:
+   - The UI needs to stay visible while the 3D scene and story progress change
+   - Using pointer-events: none prevents the overlay from blocking scrolling
+   ============================================================ */
+.ui-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    padding: var(--content-padding);
+}
+
+
+/* ============================================================
+   SECTION: Overlay Inner Layout
+   WHAT THIS DOES:
+   - Aligns the left copy block and right progress block
+
+   WHY WE NEED IT:
+   - Gives the interface a premium “editorial layout” feel
+   - Keeps the title area and progress area balanced across the screen
+   ============================================================ */
+.ui-overlay__content {
+    width: min(100%, var(--site-max-width));
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+
+/* ============================================================
+   SECTION: Left Copy Block
+   WHAT THIS DOES:
+   - Houses the kicker, title and subtitle for the current wine stage
+
+   WHY WE NEED IT:
+   - This is the main storytelling label layer for the experience
+   - Users need context about what stage they are viewing
+   ============================================================ */
+.ui-copy {
+    max-width: 620px;
+    margin-bottom: clamp(36px, 7vh, 80px);
+}
+
+.ui-kicker {
+    margin: 0 0 14px;
+    font-size: 0.85rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+}
+
+.ui-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(2.8rem, 6vw, 6rem);
+    line-height: 0.92;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    text-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.ui-subtitle {
+    margin: 14px 0 0;
+    max-width: 42ch;
+    font-size: clamp(1rem, 1.2vw, 1.2rem);
+    color: var(--color-text-soft);
+    text-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ============================================================
+   SECTION: Progress Display
+   WHAT THIS DOES:
+   - Shows the user how far they are through the cinematic journey
+
+   WHY WE NEED IT:
+   - The experience is long and story-driven
+   - A subtle progress indicator helps orientation without cluttering the UI
+   ============================================================ */
+.ui-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: clamp(36px, 7vh, 80px);
+}
+
+.ui-progress__label {
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+}
+
+.ui-progress__track {
+    position: relative;
+    width: 2px;
+    height: clamp(180px, 28vh, 280px);
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+    border-radius: 999px;
+}
+
+.ui-progress__bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(
+        180deg,
+        rgba(215, 183, 122, 0.75) 0%,
+        rgba(244, 240, 232, 0.95) 100%
+    );
+    box-shadow: 0 0 24px rgba(215, 183, 122, 0.35);
+    transition: height 0.2s linear;
+}
+
+
+/* ============================================================
+   SECTION: Overlay Atmospheric Fades
+   WHAT THIS DOES:
+   - Adds subtle vignette-like shading so text stays readable over the 3D scene
+
+   WHY WE NEED IT:
+   - Real 3D scenes can have bright or complex visuals behind the UI
+   - This soft fade helps readability without needing a heavy background panel
+   ============================================================ */
+.ui-overlay::before,
+.ui-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.ui-overlay::before {
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.12) 35%, transparent 60%);
+}
+
+.ui-overlay::after {
+    background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, transparent 20%, transparent 75%, rgba(0, 0, 0, 0.32) 100%);
+}
+
+
+/* ============================================================
+   SECTION: Stage Change Animation Helper States
+   WHAT THIS DOES:
+   - Provides classes JavaScript can use when animating title/subtitle transitions
+
+   WHY WE NEED IT:
+   - Keeps the UI transitions controlled and consistent
+   - Lets ui-controller.js fade/slide copy elegantly between stages
+   ============================================================ */
+.ui-copy.is-transitioning .ui-title,
+.ui-copy.is-transitioning .ui-subtitle,
+.ui-copy.is-transitioning .ui-kicker {
+    opacity: 0.5;
+    transform: translateY(8px);
+}
+
+
+/* ============================================================
+   SECTION: Tablet Adjustments
+   WHAT THIS DOES:
+   - Tightens the overlay spacing for medium screens
+
+   WHY WE NEED IT:
+   - Prevents the overlay from feeling oversized on tablets
+   ============================================================ */
+@media (max-width: 1024px) {
+    .ui-overlay__content {
+        align-items: flex-end;
+    }
+
+    .ui-copy {
+        max-width: 540px;
+    }
+}
+
+
+/* ============================================================
+   SECTION: Mobile Overlay Layout
+   WHAT THIS DOES:
+   - Repositions the progress UI and reduces copy scale for small screens
+
+   WHY WE NEED IT:
+   - Mobile screens need a more compact layout
+   - A vertical right-side progress rail can take up too much space on phones
+   ============================================================ */
+@media (max-width: 767px) {
+    .ui-overlay {
+        padding: 20px;
+    }
+
+    .ui-overlay__content {
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .ui-copy {
+        max-width: 100%;
+        margin-bottom: 0;
+    }
+
+    .ui-progress {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .ui-progress__label {
+        writing-mode: initial;
+        transform: none;
+    }
+
+    .ui-progress__track {
+        width: 100%;
+        height: 2px;
+    }
+
+    .ui-progress__bar {
+        width: 0%;
+        height: 100%;
+    }
+}

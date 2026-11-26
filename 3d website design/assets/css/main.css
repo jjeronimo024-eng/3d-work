@@ -1,0 +1,763 @@
+/* ============================================================
+   FILE: assets/css/main.css
+   PURPOSE:
+   Global structural styling for the cinematic wine experience.
+
+   WHY THIS FILE EXISTS:
+   - Controls the overall page shell and layout
+   - Styles the Three.js stage container
+   - Styles the loading screen
+   - Builds the scroll-story structure used by GSAP/ScrollTrigger
+   - Provides shared utility styles used across the site
+
+   HOW IT FITS INTO THE SYSTEM:
+   - Loaded by includes/header.php
+   - Works alongside ui.css
+   - Supports the HTML structure created in index.php
+   ============================================================ */
+
+
+/* ============================================================
+   SECTION: Root Theme Variables
+   WHAT THIS DOES:
+   - Stores reusable colours, spacing, sizing and timing values
+
+   WHY WE NEED IT:
+   - Makes the design easier to maintain
+   - Lets us update the visual brand in one place
+   - Reduces repeated hardcoded values across the stylesheet
+
+   SAFE TO EDIT:
+   - Colours
+   - font stacks
+   - spacing values
+   ============================================================ */
+:root {
+    --color-bg: #050505;
+    --color-bg-soft: #0b0b0b;
+    --color-panel: rgba(12, 12, 12, 0.65);
+    --color-border: rgba(255, 255, 255, 0.12);
+
+    --color-text: #f4f0e8;
+    --color-text-soft: rgba(244, 240, 232, 0.72);
+    --color-text-muted: rgba(244, 240, 232, 0.48);
+
+    --color-accent: #d7b77a;
+    --color-accent-soft: rgba(215, 183, 122, 0.35);
+
+    --font-sans: "Inter", Arial, sans-serif;
+    --font-serif: "Cormorant Garamond", Georgia, serif;
+
+    --site-max-width: 1600px;
+    --content-padding: clamp(20px, 3vw, 48px);
+    --story-stage-height: 100vh;
+
+    --transition-fast: 0.25s ease;
+    --transition-medium: 0.45s ease;
+}
+
+
+/* ============================================================
+   SECTION: Global Reset / Base Defaults
+   WHAT THIS DOES:
+   - Normalises box sizing and removes default browser spacing
+   - Sets the site background, base font and text colour
+
+   WHY WE NEED IT:
+   - Gives us a clean foundation for the cinematic layout
+   - Prevents browser defaults from interfering with the design
+   ============================================================ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: auto;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* ============================================================
+   Editorial Pages (Layer B) — Navigation + Layout + Cards
+   Added after cinematic core so index.php remains intact.
+   ============================================================ */
+
+.wine-editorial {
+    position: relative;
+    z-index: 2;
+}
+
+.editorial-container {
+    width: 100%;
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    padding: calc(var(--content-padding) + 12px) var(--content-padding) 80px;
+}
+
+.editorial-block {
+    margin: 0 0 34px;
+    padding: 26px;
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    background: rgba(10, 10, 10, 0.55);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.22);
+}
+
+.editorial-block h2 {
+    margin: 0 0 14px;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+/* Nav */
+.site-nav {
+    position: sticky;
+    margin-top: 0;
+
+    top: 0;
+    z-index: 30;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(5, 5, 5, 0.72);
+    backdrop-filter: blur(12px);
+}
+
+.site-nav__inner {
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    padding: 16px var(--content-padding);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.site-nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-serif);
+}
+
+.site-nav__brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(215, 183, 122, 0.55);
+    color: var(--color-accent);
+}
+
+.site-nav__links {
+    list-style: none;
+    display: flex;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.site-nav__links a {
+    color: var(--color-text-soft);
+    font-size: 0.95rem;
+}
+
+.site-nav__links a:hover {
+    color: var(--color-text);
+}
+
+.site-nav__dropdown { position: relative; }
+
+.site-nav__dropdown-menu {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 10px);
+    width: 260px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(5,5,5,0.92);
+    display: none;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.55);
+}
+
+.site-nav__dropdown:hover .site-nav__dropdown-menu {
+    display: block;
+}
+
+.site-nav__dropdown-menu li {
+    margin: 6px 0;
+}
+
+.site-nav__cta {
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(215, 183, 122, 0.55);
+    color: var(--color-text);
+    background: rgba(215, 183, 122, 0.08);
+}
+
+/* Mobile nav */
+.site-mobile-nav {
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: rgba(5, 5, 5, 0.72);
+    backdrop-filter: blur(12px);
+}
+
+.site-mobile-nav__toggle {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px var(--content-padding);
+    color: var(--color-text);
+}
+
+.site-mobile-nav__panel {
+    padding: 10px var(--content-padding) 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.site-mobile-nav__section-title {
+    font-size: 0.8rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 8px 0 4px;
+}
+
+.site-mobile-nav__link {
+    color: var(--color-text-soft);
+    padding: 8px 0;
+}
+
+.site-mobile-nav__cta {
+    border: 1px solid rgba(215, 183, 122, 0.55);
+    padding: 10px 14px;
+    border-radius: 999px;
+    width: fit-content;
+    color: var(--color-text);
+}
+
+/* Hero */
+.page-hero {
+    position: relative;
+    z-index: 2;
+    padding: 64px var(--content-padding) 34px;
+    overflow: hidden;
+    background: radial-gradient(circle at 20% 10%, rgba(215,183,122,0.14), transparent 42%),
+                linear-gradient(180deg, rgba(10,10,10,0.0) 0%, rgba(5,5,5,0.95) 100%);
+}
+
+.page-hero__bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 70% 0%, rgba(215,183,122,0.10), transparent 40%),
+        radial-gradient(circle at 10% 40%, rgba(255,255,255,0.06), transparent 35%);
+    pointer-events: none;
+}
+
+.page-hero__content {
+    position: relative;
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+}
+
+.page-hero__kicker {
+    font-size: 0.85rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 14px;
+}
+
+.page-hero__title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    margin: 0;
+    font-size: clamp(2.2rem, 4vw, 4rem);
+    letter-spacing: 0.02em;
+}
+
+.page-hero__subtitle {
+    margin: 14px 0 0;
+    color: var(--color-text-soft);
+    max-width: 62ch;
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-weight: 500;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn:hover { transform: translateY(-1px); }
+
+.btn--gold {
+    background: rgba(215, 183, 122, 0.18);
+    border-color: rgba(215, 183, 122, 0.55);
+    color: var(--color-text);
+}
+
+.btn--ghost {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.14);
+    color: var(--color-text-soft);
+}
+
+/* Cards */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.info-card {
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(10,10,10,0.48);
+}
+
+.info-card h3 {
+    margin: 0 0 10px;
+    font-family: var(--font-serif);
+    font-weight: 500;
+}
+
+/* Wine grid */
+.wine-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.wine-card {
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(10,10,10,0.48);
+    overflow: hidden;
+}
+
+.wine-card__img {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    background: radial-gradient(circle at center, rgba(215,183,122,0.12), transparent 55%);
+}
+
+.wine-card__body { padding: 18px; }
+
+.wine-card__name {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.wine-card__meta {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.wine-card__note {
+    color: var(--color-text-soft);
+    margin-bottom: 14px;
+}
+
+/* Gallery */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.gallery-tile {
+    height: 120px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(10,10,10,0.48);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+}
+
+/* CTA strip */
+.cta-strip {
+    padding: 10px var(--content-padding) 90px;
+}
+
+.cta-strip__inner {
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 18px;
+    border-radius: 22px;
+    border: 1px solid rgba(215,183,122,0.22);
+    background: radial-gradient(circle at 20% 20%, rgba(215,183,122,0.18), transparent 45%),
+                rgba(10,10,10,0.40);
+}
+
+@media (max-width: 1024px) {
+    .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .wine-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+    .site-nav { display: none; }
+    .site-mobile-nav { display: block; }
+    .card-grid { grid-template-columns: 1fr; }
+    .wine-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cta-strip__inner { flex-direction: column; align-items: center; }
+}
+
+
+img,
+
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* ============================================================
+   SECTION: Page Shell
+   WHAT THIS DOES:
+   - Defines the main site wrapper used by index.php
+
+   WHY WE NEED IT:
+   - Gives the app a stable layout container
+   - Helps us layer the 3D canvas, UI overlay and scroll story cleanly
+   ============================================================ */
+.site-shell {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top, rgba(90, 60, 20, 0.18), transparent 30%),
+        linear-gradient(180deg, #090909 0%, #050505 100%);
+}
+
+
+/* ============================================================
+   SECTION: Three.js Stage Container
+   WHAT THIS DOES:
+   - Creates a fixed full-screen layer for the 3D renderer
+
+   WHY WE NEED IT:
+   - The cinematic scene must stay visible while the user scrolls
+   - The scroll-story content moves, but the 3D world stays pinned visually
+   - app.js / three-engine.js will inject the renderer canvas here
+   ============================================================ */
+.three-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.03), transparent 45%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.55));
+}
+
+/* This class can be added by JavaScript once the Three.js canvas exists. */
+.three-stage canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+
+/* ============================================================
+   SECTION: Loading Screen
+   WHAT THIS DOES:
+   - Covers the page while the site is booting
+   - Gives the user a polished first impression instead of a blank screen
+
+   WHY WE NEED IT:
+   - Three.js, JSON scene data, and animations can take a moment to initialise
+   - We want the site to feel intentional even during loading
+
+   HOW IT WORKS:
+   - The loading screen is visible by default
+   - app.js will add/remove helper classes when the site is ready
+   ============================================================ */
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--content-padding);
+    background:
+        radial-gradient(circle at center, rgba(125, 85, 35, 0.18), transparent 30%),
+        rgba(5, 5, 5, 0.96);
+    backdrop-filter: blur(6px);
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loading-screen.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loading-screen__inner {
+    max-width: 720px;
+    text-align: center;
+}
+
+.loading-screen__brand {
+    margin-bottom: 12px;
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 4.25rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+}
+
+.loading-screen__text {
+    margin: 0;
+    font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+    color: var(--color-text-soft);
+}
+
+
+/* ============================================================
+   SECTION: Scroll Story Wrapper
+   WHAT THIS DOES:
+   - Holds the 12 wine journey story sections
+   - Creates the vertical space needed for the scroll-driven experience
+
+   WHY WE NEED IT:
+   - ScrollTrigger needs a real page height to map scroll progress
+   - Each stage block acts as a semantic chapter marker in the experience
+   ============================================================ */
+.scroll-story {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+}
+
+
+/* ============================================================
+   SECTION: Individual Story Stage Blocks
+   WHAT THIS DOES:
+   - Styles each stage of the wine journey
+   - Places readable text content over the 3D scene without overpowering it
+
+   WHY WE NEED IT:
+   - Gives structure and semantic meaning to the story
+   - Improves accessibility and provides fallback readable content
+   - Acts as the “timeline markers” for the cinematic scroll
+
+   DESIGN NOTE:
+   - The text is intentionally subtle because the 3D world is the hero
+   ============================================================ */
+.story-stage {
+    position: relative;
+    min-height: var(--story-stage-height);
+    display: flex;
+    align-items: flex-end;
+    padding: var(--content-padding);
+}
+
+.story-stage__inner {
+    width: min(100%, 560px);
+    margin-bottom: clamp(48px, 8vh, 90px);
+    padding: clamp(20px, 2vw, 32px);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    background: linear-gradient(
+        180deg,
+        rgba(18, 18, 18, 0.68) 0%,
+        rgba(10, 10, 10, 0.45) 100%
+    );
+    backdrop-filter: blur(10px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.28);
+}
+
+.story-stage__number {
+    display: inline-block;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+}
+
+.story-stage__title {
+    margin: 0 0 10px;
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 4rem);
+    line-height: 0.95;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--color-text);
+}
+
+.story-stage__text {
+    margin: 0;
+    max-width: 50ch;
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    color: var(--color-text-soft);
+}
+
+/* Alternate the story cards left/right slightly for rhythm.
+   This keeps the page from feeling too repetitive while scrolling. */
+.story-stage:nth-child(even) {
+    justify-content: flex-end;
+}
+
+.story-stage:nth-child(even) .story-stage__inner {
+    text-align: left;
+}
+
+
+/* ============================================================
+   SECTION: No-JavaScript Fallback
+   WHAT THIS DOES:
+   - Styles the fallback message shown when JavaScript is disabled
+
+   WHY WE NEED IT:
+   - The 3D site depends on JS, so we still want a clean fallback state
+   ============================================================ */
+.no-js-message {
+    position: relative;
+    z-index: 10;
+    margin: 40px auto;
+    width: min(90%, 720px);
+    padding: 18px 20px;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    background: rgba(10, 10, 10, 0.8);
+    color: var(--color-text-soft);
+    text-align: center;
+}
+
+
+/* ============================================================
+   SECTION: Utility State Classes
+   WHAT THIS DOES:
+   - Provides helper classes JavaScript can toggle during runtime
+
+   WHY WE NEED IT:
+   - Keeps state styling predictable and easy to maintain
+   ============================================================ */
+.is-hidden {
+    display: none !important;
+}
+
+.is-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+
+/* ============================================================
+   SECTION: Tablet Adjustments
+   WHAT THIS DOES:
+   - Tweaks spacing and panel sizing on medium screens
+
+   WHY WE NEED IT:
+   - Prevents the content cards from feeling oversized on tablets
+   ============================================================ */
+@media (max-width: 1024px) {
+    .story-stage__inner {
+        width: min(100%, 520px);
+    }
+}
+
+
+/* ============================================================
+   SECTION: Mobile Layout Adjustments
+   WHAT THIS DOES:
+   - Makes the story panels and loading screen more mobile-friendly
+
+   WHY WE NEED IT:
+   - Mobile screens need tighter spacing and more compact type scaling
+   - The experience still needs to feel premium on smaller devices
+   ============================================================ */
+@media (max-width: 767px) {
+    :root {
+        --content-padding: 20px;
+    }
+
+    .story-stage {
+        align-items: flex-end;
+        min-height: 100svh;
+    }
+
+    .story-stage__inner {
+        width: 100%;
+        margin-bottom: 24px;
+        border-radius: 16px;
+        padding: 18px;
+    }
+
+    .story-stage__title {
+        line-height: 1;
+    }
+
+    .loading-screen__brand {
+        letter-spacing: 0.12em;
+    }
+}

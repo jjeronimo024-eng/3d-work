@@ -1,0 +1,65 @@
+/* ============================================================
+   FILE: assets/data/wine-scene.json
+   PURPOSE:
+   This file defines ALL cinematic stages in data format.
+
+   WHY THIS EXISTS:
+   - Allows non-developers (admin panel later) to edit content
+   - Removes need to touch JS for updates
+   - Enables multi-wine-farm scalability
+   ============================================================ */
+
+{
+  "project": "Wine Production Experience",
+  "stages": [
+    {
+      "id": "vineyard",
+      "title": "Vineyard",
+      "subtitle": "Where the story begins in the soil",
+      "camera": { "x": 0, "y": 2, "z": 6 },
+      "bloom": 0.4
+    },
+    {
+      "id": "harvest",
+      "title": "Harvest",
+      "subtitle": "Hand-picked at peak ripeness",
+      "camera": { "x": 2, "y": 2, "z": 5 },
+      "bloom": 0.6
+    },
+    {
+      "id": "fermentation",
+      "title": "Fermentation",
+      "subtitle": "Where grapes transform into wine",
+      "camera": { "x": -1, "y": 2.5, "z": 4 },
+      "bloom": 0.3
+    },
+    {
+      "id": "barrel",
+      "title": "Barrel Aging",
+      "subtitle": "Time creates depth and character",
+      "camera": { "x": 0, "y": 3, "z": 7 },
+      "bloom": 0.5
+    },
+    {
+      "id": "bottling",
+      "title": "Bottling",
+      "subtitle": "Precision before release",
+      "camera": { "x": 0, "y": 2, "z": 5 },
+      "bloom": 0.7
+    },
+    {
+      "id": "distribution",
+      "title": "Distribution",
+      "subtitle": "Delivered to the world",
+      "camera": { "x": 3, "y": 2, "z": 6 },
+      "bloom": 0.4
+    },
+    {
+      "id": "experience",
+      "title": "Experience",
+      "subtitle": "Where wine becomes memory",
+      "camera": { "x": 0, "y": 1.8, "z": 3 },
+      "bloom": 0.9
+    }
+  ]
+}
